@@ -42,26 +42,62 @@ class StateData {
   }
 }
 
+class GraphDistrictData {
+  final String district;
+  final int cases;
+  final int deaths;
+  final int recovered;
+
+  GraphDistrictData({
+    @required this.district,
+    @required this.cases,
+    @required this.deaths,
+    @required this.recovered,
+  });
+
+  factory GraphDistrictData.fromJson(Map<String, dynamic> json) {
+    return GraphDistrictData(
+      district: json['district'] as String,
+      cases: json['cases'] as int,
+      deaths: json['deaths'] as int,
+      recovered: json['recovered'] as int,
+    );
+  }
+}
+
 class GraphStateData {
   final String state;
   final int cases;
   final int deaths;
   final int recovered;
+  List<GraphDistrictData> districts;
 
   GraphStateData(
-      {
-        @required this.state,@required this.cases,
+      {@required this.state,
+      @required this.cases,
       @required this.deaths,
-      @required this.recovered
-      });
+      @required this.recovered,
+      @required this.districts});
 
   factory GraphStateData.fromJson(Map<String, dynamic> json) {
+    if (json['districts'] == null) {
+      // print(json['state']);
+      return GraphStateData(
+          state: json['state'] as String,
+          cases: json['cases'] as int,
+          deaths: json['deaths'] as int,
+          recovered: json['recovered'] as int,
+          districts: []);
+    }
     return GraphStateData(
-      state: json['state'] as String,
-      cases: json['cases'] as int,
-      deaths: json['deaths'] as int,
-      recovered: json['recovered'] as int,
-    );
+        state: json['state'] as String,
+        cases: json['cases'] as int,
+        deaths: json['deaths'] as int,
+        recovered: json['recovered'] as int,
+        districts: json['districts']
+            .map<GraphDistrictData>(
+                (dynamic item) => GraphDistrictData.fromJson(item))
+            .toList() as List<GraphDistrictData>);
   }
 }
 
@@ -70,20 +106,32 @@ class GraphCountryData {
   final int cases;
   final int deaths;
   final int recovered;
+  List<GraphStateData> states;
 
-  GraphCountryData({
-    @required this.country,
-    @required this.cases,
-    @required this.deaths,
-    @required this.recovered,
-  });
+  GraphCountryData(
+      {@required this.country,
+      @required this.cases,
+      @required this.deaths,
+      @required this.recovered,
+      @required this.states});
 
   factory GraphCountryData.fromJson(Map<String, dynamic> json) {
+    if (json['states'] == null) {
+      return GraphCountryData(
+          country: json['country'] as String,
+          cases: json['cases'] as int,
+          deaths: json['deaths'] as int,
+          recovered: json['recovered'] as int,
+          states: []);
+    }
     return GraphCountryData(
-      country: json['country'] as String,
-      cases: json['cases'] as int,
-      deaths: json['deaths'] as int,
-      recovered: json['recovered'] as int,
-    );
+        country: json['country'] as String,
+        cases: json['cases'] as int,
+        deaths: json['deaths'] as int,
+        recovered: json['recovered'] as int,
+        states: json['states']
+            .map<GraphStateData>(
+                (dynamic item) => GraphStateData.fromJson(item))
+            .toList() as List<GraphStateData>);
   }
 }
