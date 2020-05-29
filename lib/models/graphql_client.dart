@@ -99,7 +99,7 @@ class _GraphQLChildState extends State<GraphQLChild> {
                       (dynamic item) => GraphCountryData.fromJson(item))
                   .toList()[0];
 
-              List<GraphCountryData> graphCountryData = [selectedCountry ,world];
+              List<GraphCountryData> graphCountryData = [selectedCountry ];
               graphCountryData += result.data['countries']
                   .map<GraphCountryData>(
                       (dynamic item) => GraphCountryData.fromJson(item))
@@ -108,6 +108,15 @@ class _GraphQLChildState extends State<GraphQLChild> {
               return Container(
                 child: Column(
                   children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Text(world.country),
+                        Text(world.cases.toString()),
+                        Text(world.deaths.toString()),
+                        Text(world.recovered.toString()),
+                      ],
+                    ),
                     DropdownButton<GraphCountryData>(
                         value: selectedCountry,
                         items: graphCountryData
