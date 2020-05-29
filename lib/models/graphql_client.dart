@@ -29,8 +29,17 @@ class _GraphQLChildState extends State<GraphQLChild> {
   static GraphStateData selectedState;
   static GraphDistrictData selectedDistrict;
 
-  final _queryCountryList = '''
-        query queryCountryList{
+  final _queryMasterList = '''
+        query queryMasterList{
+          all{
+            country
+            cases
+            deaths
+            recovered
+            states{
+              state
+            }
+          }
           countries {
             country
             cases
@@ -53,26 +62,6 @@ class _GraphQLChildState extends State<GraphQLChild> {
 
       ''';
 
-  String _queryStateList() {
-    String country = selectedCountry.country;
-    return '''
-            query {
-                states(countryName: "$country") {
-                  state
-                  cases
-                  deaths
-                  recovered
-                  districts {
-                    district
-                    cases
-                    deaths
-                    recovered
-                  }
-                }
-              }
-          ''';
-  }
-
   @override
   void initState() {
     super.initState();
@@ -89,8 +78,8 @@ class _GraphQLChildState extends State<GraphQLChild> {
       recovered: 0,
       districts: [],
     );
-    selectedDistrict = GraphDistrictData(
-        district: "Null", cases: 0, deaths: 0, recovered: 0);
+    selectedDistrict =
+        GraphDistrictData(district: "Null", cases: 0, deaths: 0, recovered: 0);
   }
 
   @override
@@ -98,25 +87,23 @@ class _GraphQLChildState extends State<GraphQLChild> {
     return Column(
       children: <Widget>[
         Query(
-            options: QueryOptions(documentNode: gql(_queryCountryList)),
+            options: QueryOptions(documentNode: gql(_queryMasterList)),
             builder: (QueryResult result,
                 {VoidCallback refetch, FetchMore fetchMore}) {
               if (result.data == null) {
                 return Center(child: CircularProgressIndicator());
               }
 
-              List<GraphCountryData> graphCountryData = [selectedCountry];
+              GraphCountryData world = [result.data['all']]
+                  .map<GraphCountryData>(
+                      (dynamic item) => GraphCountryData.fromJson(item))
+                  .toList()[0];
+
+              List<GraphCountryData> graphCountryData = [selectedCountry ,world];
               graphCountryData += result.data['countries']
                   .map<GraphCountryData>(
                       (dynamic item) => GraphCountryData.fromJson(item))
                   .toList();
-
-              // for(var i in selectedCountry.states){
-              //   print(i.state);
-              //   for(var j in i.districts){
-              //     print(j.district);
-              //   }
-              // }
 
               return Container(
                 child: Column(
@@ -228,49 +215,6 @@ class _GraphQLChildState extends State<GraphQLChild> {
                 ),
               );
             }),
-        // selectedCountry.country == 'Select Choice'
-        //     ? Text("Select Country")
-        //     : Query(
-        //         options: QueryOptions(documentNode: gql(_queryStateList())),
-        //         builder: (QueryResult result,
-        //             {VoidCallback refetch, FetchMore fetchMore}) {
-        //           // print(_queryStateList());
-        //           if (result.data == null) {
-        //             return Center(child: CircularProgressIndicator());
-        //           }
-
-        //           List<GraphStateData> graphStateData = [selectedState];
-        //           graphStateData += result.data['states']
-        //               .map<GraphStateData>(
-        //                   (dynamic item) => GraphStateData.fromJson(item))
-        //               .toList();
-
-        //           // print(graphStateData.length);
-        //           // for(var i in graphStateData){
-        //           //   // print(i.districts);
-        //           //   for (var j in i.districts){
-        //           //     print(j.district);
-        //           //   }
-        //           // }
-
-        //           return DropdownButton<GraphStateData>(
-        //               value: selectedState,
-        //               items: graphStateData
-        //                   .map<DropdownMenuItem<GraphStateData>>((var value) {
-        //                 return DropdownMenuItem<GraphStateData>(
-        //                   child: Text(value.state),
-        //                   value: value,
-        //                 );
-        //               }).toList(),
-        //               onChanged: (GraphStateData newValue) {
-        //                 setState(() {
-        //                   selectedState = newValue;
-        //                 });
-        //               });
-        //         }),
-        // selectedState.districts == null
-        //     ? Text("no Districts")
-        //     : Text("Has District")
       ],
     );
   }
