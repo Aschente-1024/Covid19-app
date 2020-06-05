@@ -36,6 +36,7 @@ class _GraphQLChildState extends State<GraphQLChild> {
             cases
             deaths
             recovered
+            updated
             states{
               state
             }
@@ -45,11 +46,13 @@ class _GraphQLChildState extends State<GraphQLChild> {
             cases
             deaths
             recovered
+            updated
             states {
               state
               cases
               deaths
               recovered
+              updated
               districts {
                 district
                 cases
@@ -70,16 +73,22 @@ class _GraphQLChildState extends State<GraphQLChild> {
         cases: 0,
         deaths: 0,
         recovered: 0,
+        updated: 0,
         states: []);
     selectedState = GraphStateData(
       state: "Select Choice",
       cases: 0,
       deaths: 0,
       recovered: 0,
+      updated: 0,
       districts: [],
     );
-    selectedDistrict =
-        GraphDistrictData(district: "Null", cases: 0, deaths: 0, recovered: 0);
+    selectedDistrict = GraphDistrictData(
+      district: "Null",
+      cases: 0,
+      deaths: 0,
+      recovered: 0,
+    );
   }
 
   @override
@@ -99,11 +108,17 @@ class _GraphQLChildState extends State<GraphQLChild> {
                       (dynamic item) => GraphCountryData.fromJson(item))
                   .toList()[0];
 
-              List<GraphCountryData> graphCountryData = [selectedCountry ];
+              List<GraphCountryData> graphCountryData = [selectedCountry];
               graphCountryData += result.data['countries']
                   .map<GraphCountryData>(
                       (dynamic item) => GraphCountryData.fromJson(item))
                   .toList();
+
+              if (selectedCountry.country == 'Select Choice') {
+                selectedCountry = graphCountryData
+                    .firstWhere((element) => element.country == "India");
+                selectedState = selectedCountry.states[0];
+              }
 
               return Container(
                 child: Column(
@@ -117,6 +132,7 @@ class _GraphQLChildState extends State<GraphQLChild> {
                         Text(world.recovered.toString()),
                       ],
                     ),
+                    Text("Last Updated: " + DateTime.fromMillisecondsSinceEpoch(world.updated).toString()),
                     DropdownButton<GraphCountryData>(
                         value: selectedCountry,
                         items: graphCountryData
@@ -138,6 +154,7 @@ class _GraphQLChildState extends State<GraphQLChild> {
                                 cases: 0,
                                 deaths: 0,
                                 recovered: 0,
+                                updated: 0,
                                 districts: [],
                               );
                           });

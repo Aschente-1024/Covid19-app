@@ -70,6 +70,7 @@ class GraphStateData {
   final int cases;
   final int deaths;
   final int recovered;
+  final int updated;
   List<GraphDistrictData> districts;
 
   GraphStateData(
@@ -77,6 +78,7 @@ class GraphStateData {
       @required this.cases,
       @required this.deaths,
       @required this.recovered,
+      @required this.updated,
       @required this.districts});
 
   factory GraphStateData.fromJson(Map<String, dynamic> json) {
@@ -87,6 +89,7 @@ class GraphStateData {
           cases: json['cases'] as int,
           deaths: json['deaths'] as int,
           recovered: json['recovered'] as int,
+          updated: json['updated'] as int,
           districts: []);
     }
     return GraphStateData(
@@ -94,6 +97,7 @@ class GraphStateData {
         cases: json['cases'] as int,
         deaths: json['deaths'] as int,
         recovered: json['recovered'] as int,
+        updated: json['updated'] as int,
         districts: json['districts']
             .map<GraphDistrictData>(
                 (dynamic item) => GraphDistrictData.fromJson(item))
@@ -106,6 +110,7 @@ class GraphCountryData {
   final int cases;
   final int deaths;
   final int recovered;
+  final int updated;
   List<GraphStateData> states;
 
   GraphCountryData(
@@ -113,6 +118,7 @@ class GraphCountryData {
       @required this.cases,
       @required this.deaths,
       @required this.recovered,
+      @required this.updated,
       @required this.states});
 
   factory GraphCountryData.fromJson(Map<String, dynamic> json) {
@@ -122,6 +128,7 @@ class GraphCountryData {
           cases: json['cases'] as int,
           deaths: json['deaths'] as int,
           recovered: json['recovered'] as int,
+          updated: json['updated'] as int,
           states: []);
     }
     return GraphCountryData(
@@ -129,6 +136,7 @@ class GraphCountryData {
         cases: json['cases'] as int,
         deaths: json['deaths'] as int,
         recovered: json['recovered'] as int,
+        updated: json['updated'] as int,
         states: json['states']
             .map<GraphStateData>(
                 (dynamic item) => GraphStateData.fromJson(item))
