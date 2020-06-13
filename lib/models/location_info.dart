@@ -78,9 +78,10 @@ Future getNearbyZones(radius) async {
     'key': apiKey,
     'lng': position.longitude,
     'lat': position.latitude,
-    'radius': radius ?? 3000
+    'radius': 3000
   };
   var response = await post(url, body: json.encode(body));
+  print(response.body);
   NearByZones nearByZones = NearByZones.fromJson(json.decode(response.body));
   print(nearByZones.containmentZoneNames);
 
@@ -96,4 +97,45 @@ Future checkPinCode(String pincode) async {
   print(pinCodeCheck.data.district);
 
   return pinCodeCheck;
+}
+
+
+class buildLocationInfo extends StatefulWidget {
+  @override
+  _buildLocationInfoState createState() => _buildLocationInfoState();
+}
+
+class _buildLocationInfoState extends State<buildLocationInfo> {
+  var nearbyZones;
+  @override
+  void initState() {
+    super.initState();
+    this.nearbyZones =  getNearbyZones(3000);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+          child: FutureBuilder(
+            future: nearbyZones,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return SafeArea(
+                child: ListView.builder(
+                  itemCount: snapshot.data.numberOfNearbyZones,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                        title: Text(
+                            snapshot.data.containmentZoneNames[index]));
+                  },
+                ),
+              );
+            },
+          ),
+        );
+  }
 }
