@@ -15,16 +15,16 @@ class StateData {
 
   StateData(
       {@required this.active,
-      @required this.confirmed,
-      @required this.deaths,
-      @required this.deltaconfirmed,
-      @required this.deltadeaths,
-      @required this.deltarecovered,
-      @required this.lastupdatedtime,
-      @required this.recovered,
-      @required this.state,
-      @required this.statecode,
-      @required this.statenotes});
+        @required this.confirmed,
+        @required this.deaths,
+        @required this.deltaconfirmed,
+        @required this.deltadeaths,
+        @required this.deltarecovered,
+        @required this.lastupdatedtime,
+        @required this.recovered,
+        @required this.state,
+        @required this.statecode,
+        @required this.statenotes});
 
   factory StateData.fromJson(Map<String, dynamic> json) {
     return StateData(
@@ -75,11 +75,11 @@ class GraphStateData {
 
   GraphStateData(
       {@required this.state,
-      @required this.cases,
-      @required this.deaths,
-      @required this.recovered,
-      @required this.updated,
-      @required this.districts});
+        @required this.cases,
+        @required this.deaths,
+        @required this.recovered,
+        @required this.updated,
+        @required this.districts});
 
   factory GraphStateData.fromJson(Map<String, dynamic> json) {
     if (json['districts'] == null) {
@@ -115,11 +115,11 @@ class GraphCountryData {
 
   GraphCountryData(
       {@required this.country,
-      @required this.cases,
-      @required this.deaths,
-      @required this.recovered,
-      @required this.updated,
-      @required this.states});
+        @required this.cases,
+        @required this.deaths,
+        @required this.recovered,
+        @required this.updated,
+        @required this.states});
 
   factory GraphCountryData.fromJson(Map<String, dynamic> json) {
     if (json['states'] == null) {
